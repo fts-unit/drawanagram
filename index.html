@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<title>どろわなぐらむ - Draw-anagram -</title>
+	<link type="text/css" rel="stylesheet" href="./src/style.css" />
+	<!--link type="text/css" rel="stylesheet" href="./src/style.css" />
+	<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" /-->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="./src/drawanagram.js"></script>
+	<meta name="application-name" content="どろわなぐらむ">
+	<meta name="description" content="ランダムに配られたひらがなで文章を作りましょ〜。">
+</head>
+<body>
+	<h1>どろわなぐらむ</h1>
+	<p class="explanatory">　どろわなぐらむ（Draw-anagram）です。<br>　ランダムに配られたひらがなで文章を作りましょ〜。</p>
+	<button id="op-draw">　どろー！　</button>　<button id="opt-open">　▼　おぷしょん　▼　</button>
+	<br>
+	<div class="opt-menu" style="display: none;">
+		<div class="opt-draw" >
+			<label><input type="radio" name="drawana" id="draw" value="draw" checked="checked">　どろわなぐらむ　　</label>
+			<br>
+			<label><input type="checkbox" name="lower" id="lower">こもじ　　　</label>
+			<label><input type="checkbox" name="voc" id="voc">だくおん　　</label>
+			<br>
+			<label><input type="radio" name="number" id="short" value="7">すくなめ　　</label>
+			<label><input type="radio" name="number" id="just" value="19" checked="checked">ふつう　　　</label>
+			<br>
+			<label><input type="radio" name="number" id="long" value="29">おおめ　　　</label>
+			<label><input type="radio" name="number" id="vast" value="41">げきむず　　</label>
+			<label><input type="radio" name="number" id="full" value="46">ぜんぶ　　</label>
+		</div>
+		<div class="opt-ana" >
+			<label><input type="radio" name="drawana" id="ana" value="ana">　あなぐらむ　　　　</label>
+			<br>
+		　　<textarea id="anatext" rows="4" cols="40" title="ふつうのあなぐらむ（ひらがな限定）"></textarea>
+		</div>
+	</div>
+	<p id="att" ></p>
+	<div id="main">
+		<div class="drop" id="play-mat">
+		</div>
+	</div>
+
+</body>
+</html>

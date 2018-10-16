@@ -1,0 +1,49 @@
+@charset 'utf-8';
+html {
+    font-family: 'メイリオ', Arial, Helvetica, sans-serif;
+}
+body {
+    background-image: url("../img/paper.jpg");
+    background-repeat: repeat;
+}
+h1 {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #666666;
+}
+.explanatory {
+    color: #ffffff;
+    text-shadow: 1px 1px 2px #666666;
+}
+.drag {
+    width: 80px;
+    height: 80px;
+    float:left;
+}
+#play-mat {
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    margin: 0px;
+    padding:20px;
+    border: solid 10px #A0522D;
+    background-color: #F5F5DC;
+    background-image: url("../img/cork.jpg");
+    box-shadow: 2px 2px 20px #666666;
+}
+#att { clear:left; }
+.opt-manu {
+    margin: 20px;
+    padding: 20px;
+    width: 860px;
+    height:160px;
+}
+.opt-draw {
+    float: left;
+    margin: 20px;
+    width: 400px;
+}
+.opt-ana {
+    float: left;
+    margin: 20px;
+    width: 360px;
+}
