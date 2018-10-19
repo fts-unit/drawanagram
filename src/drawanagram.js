@@ -10,7 +10,7 @@ $(function() {
             $('#opt-open').text('　▼　おぷしょん　▼　');
         }
     });
-
+    
     // プレースホルダ
     $(window).load(function(){
         $('input[type=text],input[type=password],textarea').each(function(){
@@ -53,6 +53,27 @@ $(function() {
                 }
             }
         });
+    });
+
+    // プレイマットのサイズ変更
+    $(window).on("load orientationchange resize", function(){
+        var win_w = $(window).width();
+        var win_h = $(window).height();
+        $('#play-mat').width(win_w - 80);
+        var opt_lw = $('.opt-draw').width();
+        var opt_rw = $('.opt-ana').width();
+        if(win_w < (opt_lw + opt_rw)){
+            $('.opt-draw').css('float','none');
+            $('.opt-ana').css('float','none');
+        } else {
+            $('.opt-draw').css('float','left');
+            $('.opt-ana').css('float','left');
+        }
+        if(win_w > win_h){
+            $('#play-mat').height($('#play-mat').width() * 2 / 3);
+        }else{
+            $('#play-mat').height($('#play-mat').width() * 3 / 2);
+        }
     });
 
     // ラジオボタンチェック

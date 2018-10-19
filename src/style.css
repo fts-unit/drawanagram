@@ -5,6 +5,7 @@ html {
 body {
     background-image: url("../img/paper.jpg");
     background-repeat: repeat;
+    position: relative;
 }
 h1 {
     color: #ffffff;
