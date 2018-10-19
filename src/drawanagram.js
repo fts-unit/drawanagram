@@ -63,8 +63,6 @@ $(function() {
         $('#play-mat').width(win_w - 80);
         var opt_lw = $('.opt-draw').width();
         var opt_rw = $('.opt-ana').width();
-        var btn_fs = Math.ceil(($('.explanatory').height() - 16) / 2);
-        $('button').css('font-size', btn_fs + 'px');
         if(Math.abs(window.orientation) === 90){
             // ランドスケープ
 		}else{
