@@ -43,11 +43,12 @@ button {
 }
 .opt-draw {
     float: left;
+    white-space: nowrap;
     margin: 20px;
     width: 400px;
 }
 .opt-ana {
-    float: left;
+    float: right;
     margin: 20px;
     width: 360px;
 }
