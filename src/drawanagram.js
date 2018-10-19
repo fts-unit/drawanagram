@@ -62,7 +62,8 @@ $(function() {
         $('#play-mat').width(win_w - 80);
         var opt_lw = $('.opt-draw').width();
         var opt_rw = $('.opt-ana').width();
-        $('button').css('font-size', Math.ceil($('explanatory').height / 2) + 'px');
+        var btn_fs = Math.ceil($('.explanatory').height() / 2);
+        $('button').css('font-size', btn_fs + 'px');
         if(win_w < (opt_lw + opt_rw)){
             $('.opt-draw').css('float','none');
             $('.opt-ana').css('float','none');
