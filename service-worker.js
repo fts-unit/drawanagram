@@ -1,10 +1,10 @@
 // service-worker.js
-var CACHE_STATIC_VERSION = 'static-v2';
+var CACHE_STATIC_VERSION = 'static-v3';
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
 
-  event.waitUntil(
+  e.waitUntil(
     caches.open(CACHE_STATIC_VERSION)
       .then(function(cache) {
         console.log('[Service Worker] Precaching App...');
@@ -20,7 +20,7 @@ self.addEventListener('install', function(e) {
 
 self.addEventListener('activate', function(e) {
   console.log('[ServiceWorker] Activate');
-  event.waitUntil(
+  e.waitUntil(
     caches.keys()
       .then(function(keyList) {
         return Promise.all(keyList.map(function(key) {
@@ -34,7 +34,7 @@ self.addEventListener('activate', function(e) {
   return self.clients.claim();
 });
 
-var CACHE_DYNAMIC_VERSION = 'dynamic-v2';
+var CACHE_DYNAMIC_VERSION = 'dynamic-v3';
 
 self.addEventListener('fetch', function(event) {
   console.log('[Service Worker] Fetch');
