@@ -1,9 +1,10 @@
-$(function() {
+var cardsize = 80;
+var base_mat_h = 480;
+//1inch=2.54cm
+var INCH_PAR_CM = 2.54;
+var pr_w = 480;
 
-    var cardsize = 80;
-    var base_mat_h = 480;
-    //1inch=2.54cm
-    var INCH_PAR_CM = 2.54;
+$(function() {
 
     // オプションメニュー開閉
     $('#opt-open').click(function(){
@@ -18,9 +19,6 @@ $(function() {
     
     // プレースホルダ
     $(window).load(function(){
-        var pr_w = $(window).width();
-        cardsize = 3 * deviceDpi.estimatedActualDpi * INCH_PAR_CM;
-        base_mat_h = cardsize * 6;
         $('input[type=text],input[type=password],textarea').each(function(){
             var thisTitle = $(this).attr('title');
             if(!(thisTitle === '')){
@@ -65,6 +63,10 @@ $(function() {
 
     // プレイマットのサイズ変更
     $(window).on("load orientationchange resize", function(){
+        pr_w = $(window).width();
+        //cardsize = 2 * deviceDpi().logicalDpi / INCH_PAR_CM;
+        base_mat_h = cardsize * 6;
+        
         var win_w = $(window).width();
         var win_h = $(window).height();
         $('#play-mat').width(win_w - 80);
@@ -379,11 +381,12 @@ function deviceDpi(){
         width = windowWidthHeight().windowWidth ,
         coefficient ,
         logicalDpi ,
-        estimatedActualDpi = logicalDpi * ratio;
+        estimatedActualDpi;
     ratio < 2  ? coefficient = -ratio : coefficient = ratio ,
     logicalDpi = ( devicePixelRatio === 1 ) ? 
         ( POINTDPI + Math.sqrt( Math.sqrt( windowWidthHeight().windowWidth ) ) * coefficient ) :
         ( POINTDPI + ( POINTDPI / ratio ) + Math.sqrt( Math.sqrt( width ) ) * coefficient ) ;
+    estimatedActualDpi = logicalDpi * ratio;
     return { 
         logicalDpi : logicalDpi,
         estimatedActualDpi : estimatedActualDpi   
