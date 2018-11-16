@@ -1,5 +1,10 @@
 $(function() {
-    
+
+    var cardsize = 80;
+    var base_mat_h = 480;
+    //1inch=2.54cm
+    var INCH_PAR_CM = 2.54;
+
     // オプションメニュー開閉
     $('#opt-open').click(function(){
         if ($('.opt-menu').css('display') == 'none') {
@@ -14,6 +19,8 @@ $(function() {
     // プレースホルダ
     $(window).load(function(){
         var pr_w = $(window).width();
+        cardsize = 3 * deviceDpi.estimatedActualDpi * INCH_PAR_CM;
+        base_mat_h = cardsize * 6;
         $('input[type=text],input[type=password],textarea').each(function(){
             var thisTitle = $(this).attr('title');
             if(!(thisTitle === '')){
@@ -201,15 +208,15 @@ $(function() {
 
         // カード配布
         $('#play-mat').empty();
-        var mat_h = Math.ceil(cards/Math.floor(($('#play-mat').width())/80))*240;
-        if(mat_h > 480){
+        var mat_h = Math.ceil(cards/Math.floor(($('#play-mat').width())/cardsize))*3*cardsize;
+        if(mat_h > (base_mat_h)){
             $('#play-mat').height(mat_h); 
         }
         else{
-            $('#play-mat').height(480); 
+            $('#play-mat').height(base_mat_h); 
         }
         for(i = 0; i < cards; i++){
-            var dom = '<div id="drag' + i + '" class="drag"><img src="./img/chars/' + ("00"+chars[i]).slice(-3) + '.png" height="80px"  width="80px" alt="' + ("00"+chars[i]).slice(-3) + '.png"></div>\n';
+            var dom = '<div id="drag' + i + '" class="drag"><img src="./img/chars/' + ("00"+chars[i]).slice(-3) + '.png" height="' + cardsize + 'px"  width="' + cardsize + 'px" alt="' + ("00"+chars[i]).slice(-3) + '.png"></div>\n';
             var $target = $('#play-mat');
             $target.append(dom);
         }
@@ -353,5 +360,45 @@ function KanaNum(char){
             return i + 1;
             break;
         }
+    }
+}
+
+// DPI取得関連
+function windowWidthHeight(){
+    var ratio;
+    window.devicePixelRatio ? ratio = window.devicePixelRatio : ratio = 1 ;
+    return{ 
+        windowWidth : window.innerWidth , 
+        windowHeight : window.innerHeight,
+        devicePixelRatio : ratio
+    };
+}
+function deviceDpi(){
+    var POINTDPI = 96 ,
+        ratio = windowWidthHeight().devicePixelRatio ,
+        width = windowWidthHeight().windowWidth ,
+        coefficient ,
+        logicalDpi ,
+        estimatedActualDpi = logicalDpi * ratio;
+    ratio < 2  ? coefficient = -ratio : coefficient = ratio ,
+    logicalDpi = ( devicePixelRatio === 1 ) ? 
+        ( POINTDPI + Math.sqrt( Math.sqrt( windowWidthHeight().windowWidth ) ) * coefficient ) :
+        ( POINTDPI + ( POINTDPI / ratio ) + Math.sqrt( Math.sqrt( width ) ) * coefficient ) ;
+    return { 
+        logicalDpi : logicalDpi,
+        estimatedActualDpi : estimatedActualDpi   
+    };
+}
+function deviceInchSize(){
+    var dpi = deviceDpi().logicalDpi ,
+        width = windowWidthHeight().windowWidth ,
+        height = windowWidthHeight().windowHeight ;
+        widthInch = width / dpi ,
+        heightInch = height / dpi ,
+        diagonalInch = Math.sqrt( Math.pow( widthInch , 2 ) + Math.pow( heightInch , 2 ) );
+    return {
+        widthInch : widthInch ,
+        heightInch : heightInch ,
+        diagonalInch : diagonalInch
     }
 }
