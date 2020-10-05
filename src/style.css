@@ -1,6 +1,6 @@
 @charset 'utf-8';
-html {
-    font-family: 'メイリオ', Arial, Helvetica, sans-serif;
+html, button{
+    font-family:  'mplus-1c-regular', 'メイリオ', Arial, Helvetica, sans-serif;
 }
 body {
     background-image: url("../img/paper.jpg");
@@ -17,6 +17,7 @@ button {
 .explanatory {
     color: #ffffff;
     text-shadow: 1px 1px 2px #666666;
+    margin-top: 0px;
 }
 .drag {
     width: 80px;
