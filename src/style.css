@@ -1,6 +1,6 @@
 @charset 'utf-8';
 html, button, body, label{
-    font-family:  'mplus-1c-regular', 'メイリオ', Arial, Helvetica, sans-serif;
+    font-family: 'M PLUS 1p', 'メイリオ', Arial, Helvetica, sans-serif;
 }
 body {
     background-image: url("../img/paper.jpg");
