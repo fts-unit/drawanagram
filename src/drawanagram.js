@@ -405,3 +405,15 @@ function deviceInchSize(){
         diagonalInch : diagonalInch
     }
 }
+
+function handleDownload() {
+    html2canvas(document.querySelector("#main"))
+    .then(canvas => {
+        canvas.toBlob(function(blob) {
+            window.saveAs(blob, 'my-node.png');
+          }, "image/png");
+    })
+    .catch((error) => {
+      alert(error);
+    });
+}
