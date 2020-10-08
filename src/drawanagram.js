@@ -410,8 +410,11 @@ function handleDownload() {
     html2canvas(document.querySelector("#main"))
     .then(canvas => {
         canvas.toBlob(function(blob) {
-            window.saveAs(blob, 'my-node.png');
-          }, "image/png");
+	    let link = document.createElement("a");
+	    link.href = window.URL.createObjectURL(blob);
+	    link.download = "DrawAnagram.png";
+	    link.click();
+  	}, "image/png");
     })
     .catch((error) => {
       alert(error);
