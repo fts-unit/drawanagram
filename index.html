@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="./src/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="./src/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="./src/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
 	<script type="text/javascript" src="./src/drawanagram.js"></script>
 	<meta name="application-name" content="どろわなぐらむ">
 	<meta name="description" content="ランダムに配られたひらがなで文章を作りましょ〜。">
@@ -25,7 +26,7 @@
 	<!-- h1>どろわなぐらむ</h1 -->
 	<img src="./img/logo.png" width="330" height="96"/>
 	<p class="explanatory">　どろわなぐらむ（Draw-anagram）です。<br>　ランダムに配られたひらがなで文章を作りましょ〜。</p>
-	<button id="op-draw">　どろー！　</button>　<button id="opt-open">　▼　おぷしょん　▼　</button>
+	<button id="op-draw">　どろー！　</button>　<button id="opt-open">　▼　おぷしょん　▼　</button>　<button id="btn-dl" onclick="handleDownload()">　結果を画像でダウンロード　</button>
 	<br>
 	<div class="opt-menu" style="display: none;">
 		<div class="opt-draw" >
