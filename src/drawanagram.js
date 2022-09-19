@@ -3,6 +3,11 @@ var base_mat_h = 480;
 //1inch=2.54cm
 var INCH_PAR_CM = 2.54;
 var pr_w = 480;
+var f_play = false;
+var cards = 0;
+var chars = [];
+var strKana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー';
+var arrKana = strKana.split('');
 
 $(function() {
 
@@ -100,15 +105,18 @@ $(function() {
 
     // どろわなぐらむ 本体
     $('#op-draw').on('click', function() {
-
+        f_play = true;
         
         if ($('.opt-menu').css('display')!== 'none') {
             $('.opt-menu').slideUp('slow');
             $('#opt-open').text('　▼　おぷしょん　▼　');
         }
 
-        var i, j, l_num, v_num, n_num, cards;
-        var charN, charL, charV, chars;
+        var i, j, l_num, v_num, n_num;
+        //var i, j, l_num, v_num, n_num, cards;
+        var charN, charL, charV;
+        //var charN, charL, charV, chars;
+        cards = 0;
 
         var checkL = $('#lower').is(':checked');
         var checkV = $('#voc').is(':checked');
@@ -260,6 +268,73 @@ $(function() {
             });
         });
     });
+
+    // 並べ替え判定
+    $('#opt-chk').click(function(){
+        var char_msg = "どろー前には使えません！"; 
+        var i;
+        var str_res = ""
+        if(f_play){
+            var mat_x = $('#play-mat').offset().left;
+            var mat_y = $('#play-mat').offset().top;
+            var max_x = 0;
+            var max_y = 0;
+            var min_x = $('#play-mat').width();
+            var min_y = $('#play-mat').height();
+            var tmp_x = 0;
+            var tmp_y = 0;
+            char_msg = "マット位置：x = " + mat_x;
+            char_msg += ", y = " + mat_y;
+            for(i = 0; i < cards; i++){
+                tmp_x = ($('#drag' + i).offset().left - mat_x);
+                tmp_y = ($('#drag' + i).offset().top - mat_y);
+                min_x = (min_x >= tmp_x) ? tmp_x : min_x;
+                min_y = (min_y >= tmp_y) ? tmp_y : min_y;
+                max_x = (max_x <= tmp_x) ? tmp_x : max_x;
+                max_y = (max_y <= tmp_y) ? tmp_y : max_y;
+                char_msg += "\n\r" + (i + 1) + " 枚目「" + arrKana[chars[i] - 1] + "」位置：x = " + tmp_x;
+                char_msg += ", y = " + tmp_y;
+            } 
+            var cols = parseInt((max_x - min_x) / 80) + 1;
+            var rows = parseInt((max_y - min_y) / 80) + 1;
+            char_msg = "行数：" + rows + ", 行字数：" + cols + "\n\r" + char_msg;
+            var arr_res = []
+            for(i = 0; i < rows; i++){
+                var arr_tmp = []
+                for(j = 0; j < cards; j++){
+                    tmp_x = ($('#drag' + j).offset().left - mat_x);
+                    tmp_y = ($('#drag' + j).offset().top - mat_y);
+                    var tmp_row = parseInt((tmp_y - min_y) / 80);                    
+                    if(tmp_row == i){
+                        arr_tmp.push(j);
+                    }
+                }
+                arr_res.push(arr_tmp);
+            }
+            arr_res.forEach(function(elm, ide){
+                elm.forEach(function(cld, idc){
+                    for(i = (idc + 1); i < elm.length; i++){
+                        tmp_x = ($('#drag' + arr_res[ide][idc]).offset().left);
+                        var tgt_x = ($('#drag' + arr_res[ide][i]).offset().left);
+                        if(tgt_x < tmp_x){
+                            var tmp_id = arr_res[ide][idc];
+                            arr_res[ide][idc] = arr_res[ide][i];
+                            arr_res[ide][i] = tmp_id;
+                        }
+                    }
+                })
+            })
+            arr_res.forEach(function(elm, ide){
+                elm.forEach(function(cld, idc){
+                    str_res += arrKana[chars[arr_res[ide][idc]] - 1];
+                })
+                str_res += "\n\r"
+            })
+            char_msg = str_res + "\n\r" + char_msg;
+            
+        }
+        alert(char_msg);
+    });
 });
 
 
@@ -355,10 +430,8 @@ function getSubCards(rdy, crd) {
 
 // かな⇒画像ファイルナンバー変換
 function KanaNum(char){
-    var str = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー';
-    var arr = str.split('');
-    for(i=0; i<arr.length;i++){
-        if(arr[i] == char){
+    for(i=0; i<arrKana.length;i++){
+        if(arrKana[i] == char){
             return i + 1;
             break;
         }
