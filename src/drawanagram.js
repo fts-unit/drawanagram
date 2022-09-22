@@ -6,6 +6,7 @@ var pr_w = 480;
 var f_play = false;
 var cards = 0;
 var chars = [];
+var jdg_thin = 0.7; // 判定深度
 var strKana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー';
 var arrKana = strKana.split('');
 
@@ -114,8 +115,6 @@ $(function() {
 
         var i, j, l_num, v_num, n_num;
         //var i, j, l_num, v_num, n_num, cards;
-        var charN, charL, charV;
-        //var charN, charL, charV, chars;
         cards = 0;
 
         var checkL = $('#lower').is(':checked');
@@ -271,10 +270,12 @@ $(function() {
 
     // 並べ替え判定
     $('#opt-chk').click(function(){
-        var char_msg = "どろー前には使えません！"; 
+        var str_msg = "どろー前には使えません！"; 
         var i;
         var str_res = ""
         if(f_play){
+            //var mat_padd = 30;
+            var mat_padd = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
             var mat_x = $('#play-mat').offset().left;
             var mat_y = $('#play-mat').offset().top;
             var max_x = 0;
@@ -283,8 +284,8 @@ $(function() {
             var min_y = $('#play-mat').height();
             var tmp_x = 0;
             var tmp_y = 0;
-            char_msg = "マット位置：x = " + mat_x;
-            char_msg += ", y = " + mat_y;
+            //str_msg = "マット位置：x = " + mat_x;
+            //str_msg += ", y = " + mat_y;
             for(i = 0; i < cards; i++){
                 tmp_x = ($('#drag' + i).offset().left - mat_x);
                 tmp_y = ($('#drag' + i).offset().top - mat_y);
@@ -292,13 +293,62 @@ $(function() {
                 min_y = (min_y >= tmp_y) ? tmp_y : min_y;
                 max_x = (max_x <= tmp_x) ? tmp_x : max_x;
                 max_y = (max_y <= tmp_y) ? tmp_y : max_y;
-                char_msg += "\n\r" + (i + 1) + " 枚目「" + arrKana[chars[i] - 1] + "」位置：x = " + tmp_x;
-                char_msg += ", y = " + tmp_y;
+                
+                //str_msg += "\n" + (i + 1) + " 枚目「" + arrKana[chars[i] - 1] + "」位置：x = " + tmp_x;
+                //str_msg += ", y = " + tmp_y;
             } 
-            var cols = parseInt((max_x - min_x) / 80) + 1;
-            var rows = parseInt((max_y - min_y) / 80) + 1;
-            char_msg = "行数：" + rows + ", 行字数：" + cols + "\n\r" + char_msg;
+            //var cols = parseInt((max_x - min_x) / cardsize) + 1;
+            //var rows = parseInt((max_y - min_y) / cardsize) + 1;
+            //str_msg = "行数：" + rows + ", 行字数：" + cols + "\n" + str_msg;
             var arr_res = []
+            var std_x = mat_padd;
+            var std_y = mat_padd;
+            var k = 0.5;
+
+            // 探索型
+            while(true){
+                var arr_tmp = [];
+                k = 1;
+                var f_head = true;
+                std_x = mat_padd - 1;
+                min_y = std_y + mat_padd;
+                while(true) {
+                    for(i = 0; i < cards; i++){
+                        tmp_x = $('#drag' + i).offset().left - mat_x;
+                        tmp_y = $('#drag' + i).offset().top - mat_y;
+                        if(tmp_x > std_x && tmp_x <= (std_x + cardsize * k) && tmp_y >= std_y && tmp_y < (std_y + cardsize)){
+                            arr_tmp.push(i);
+                            std_x = tmp_x;
+                            k = 1.5;
+                            f_head = false;
+                            if(tmp_y < min_y){
+                                min_y = tmp_y;
+                            }
+                            break;
+                        } 
+                        if(i == (cards - 1)){
+                            f_head = true;
+                        }
+                    }
+                    if(f_head) {
+                        std_x = std_x + (cardsize * jdg_thin);
+                    }
+                    if(std_x > max_x){
+                        break;
+                    }
+                }
+                arr_res.push(arr_tmp);
+                if(arr_res.length && !arr_tmp.length){
+                    break;
+                }
+                std_y = min_y + (cardsize * jdg_thin);
+                if(std_y > max_y){
+                    break;
+                }
+            }
+
+            // 整列型（参考）
+            /*
             for(i = 0; i < rows; i++){
                 var arr_tmp = []
                 for(j = 0; j < cards; j++){
@@ -324,16 +374,19 @@ $(function() {
                     }
                 })
             })
+            */
+
+            // メッセージへの回答文字列の格納
             arr_res.forEach(function(elm, ide){
                 elm.forEach(function(cld, idc){
                     str_res += arrKana[chars[arr_res[ide][idc]] - 1];
                 })
-                str_res += "\n\r"
+                str_res += "\n"
             })
-            char_msg = str_res + "\n\r" + char_msg;
-            
+            str_msg = str_res;
+            //str_msg = str_res + "\n" + str_msg;
         }
-        alert(char_msg);
+        alert(str_msg);
     });
 });
 
