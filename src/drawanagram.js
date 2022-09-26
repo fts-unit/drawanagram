@@ -347,7 +347,7 @@ $(function() {
             // 漢字変換（全句第一候補で変換）
             let xhr = new XMLHttpRequest();
             var utf8str = encodeURIComponent(str_res);
-            xhr.open('GET', 'http://www.google.com/transliterate?langpair=ja-Hira|ja&text=' + utf8str);
+            xhr.open('GET', 'https://www.google.com/transliterate?langpair=ja-Hira|ja&text=' + utf8str);
             xhr.send();
             xhr.onload = function() {
                 if (xhr.status != 200) { // レスポンスの HTTP ステータスを解析
