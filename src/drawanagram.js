@@ -113,8 +113,7 @@ $(function() {
             $('#opt-open').text('　▼　おぷしょん　▼　');
         }
 
-        var i, j, l_num, v_num, n_num;
-        //var i, j, l_num, v_num, n_num, cards;
+        var i, l_num, v_num, n_num;
         cards = 0;
 
         var checkL = $('#lower').is(':checked');
@@ -130,7 +129,6 @@ $(function() {
             //どろわなぐらむ
 
             var chkS = $('#short').is(':checked');
-            var chkJ = $('#just').is(':checked');
             var chkL = $('#long').is(':checked');
             var chkV = $('#vast').is(':checked');
             var chkF = $('#full').is(':checked');
@@ -204,7 +202,7 @@ $(function() {
                 $('#att').text('「 ' + strta + ' 」');
                 var arrta  = strta.split('');
                 chars = [];
-                for(i=0; i<arrta.length; i++){
+                for(i = 0; i < arrta.length; i++){
                     chars[i] = KanaNum(arrta[i]);
                 }
                 cards = arrta.length;
@@ -271,10 +269,9 @@ $(function() {
     // 並べ替え判定
     $('#opt-chk').click(function(){
         var str_msg = "どろー前には使えません！"; 
-        var i;
-        var str_res = ""
         if(f_play){
-            //var mat_padd = 30;
+            var str_res = ""
+            var i;
             var mat_padd = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
             var mat_x = $('#play-mat').offset().left;
             var mat_y = $('#play-mat').offset().top;
@@ -284,8 +281,6 @@ $(function() {
             var min_y = $('#play-mat').height();
             var tmp_x = 0;
             var tmp_y = 0;
-            //str_msg = "マット位置：x = " + mat_x;
-            //str_msg += ", y = " + mat_y;
             for(i = 0; i < cards; i++){
                 tmp_x = ($('#drag' + i).offset().left - mat_x);
                 tmp_y = ($('#drag' + i).offset().top - mat_y);
@@ -293,25 +288,18 @@ $(function() {
                 min_y = (min_y >= tmp_y) ? tmp_y : min_y;
                 max_x = (max_x <= tmp_x) ? tmp_x : max_x;
                 max_y = (max_y <= tmp_y) ? tmp_y : max_y;
-                
-                //str_msg += "\n" + (i + 1) + " 枚目「" + arrKana[chars[i] - 1] + "」位置：x = " + tmp_x;
-                //str_msg += ", y = " + tmp_y;
             } 
-            //var cols = parseInt((max_x - min_x) / cardsize) + 1;
-            //var rows = parseInt((max_y - min_y) / cardsize) + 1;
-            //str_msg = "行数：" + rows + ", 行字数：" + cols + "\n" + str_msg;
             var arr_res = []
             var std_x = mat_padd;
             var std_y = mat_padd;
-            var k = 0.5;
 
-            // 探索型
+            // 探索
             while(true){
                 var arr_tmp = [];
-                k = 1;
+                var k = jdg_thin;
                 var f_head = true;
                 std_x = mat_padd - 1;
-                min_y = std_y + mat_padd;
+                min_y = $('#play-mat').height();
                 while(true) {
                     for(i = 0; i < cards; i++){
                         tmp_x = $('#drag' + i).offset().left - mat_x;
@@ -347,46 +335,46 @@ $(function() {
                 }
             }
 
-            // 整列型（参考）
-            /*
-            for(i = 0; i < rows; i++){
-                var arr_tmp = []
-                for(j = 0; j < cards; j++){
-                    tmp_x = ($('#drag' + j).offset().left - mat_x);
-                    tmp_y = ($('#drag' + j).offset().top - mat_y);
-                    var tmp_row = parseInt((tmp_y - min_y) / 80);                    
-                    if(tmp_row == i){
-                        arr_tmp.push(j);
-                    }
-                }
-                arr_res.push(arr_tmp);
-            }
-            arr_res.forEach(function(elm, ide){
-                elm.forEach(function(cld, idc){
-                    for(i = (idc + 1); i < elm.length; i++){
-                        tmp_x = ($('#drag' + arr_res[ide][idc]).offset().left);
-                        var tgt_x = ($('#drag' + arr_res[ide][i]).offset().left);
-                        if(tgt_x < tmp_x){
-                            var tmp_id = arr_res[ide][idc];
-                            arr_res[ide][idc] = arr_res[ide][i];
-                            arr_res[ide][i] = tmp_id;
-                        }
-                    }
-                })
-            })
-            */
-
             // メッセージへの回答文字列の格納
             arr_res.forEach(function(elm, ide){
                 elm.forEach(function(cld, idc){
                     str_res += arrKana[chars[arr_res[ide][idc]] - 1];
                 })
-                str_res += "\n"
+                str_res += ","
             })
             str_msg = str_res;
             //str_msg = str_res + "\n" + str_msg;
+            // 漢字変換（全句第一候補で変換）
+            let xhr = new XMLHttpRequest();
+            var utf8str = encodeURIComponent(str_res);
+            xhr.open('GET', 'http://www.google.com/transliterate?langpair=ja-Hira|ja&text=' + utf8str);
+            xhr.send();
+            xhr.onload = function() {
+                if (xhr.status != 200) { // レスポンスの HTTP ステータスを解析
+                    alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+                } else { // show the result
+                    console.log(xhr.responseText); // responseText is the server
+                    const jsonObj = JSON.parse(xhr.responseText);
+                    str_msg = "";
+                    jsonObj.forEach(elm => {
+                        str_msg += elm[1][0];
+                    });
+                    alert(str_msg);
+                }
+            }
+            xhr.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    console.log(`Received ${event.loaded} of ${event.total} bytes`);
+                } else {
+                    console.log(`Received ${event.loaded} bytes`); // no Content-Length
+                }
+            }
+            xhr.onerror = function() {
+                alert("Request failed");
+            }
+        } else {
+            alert(str_msg);
         }
-        alert(str_msg);
     });
 });
 
@@ -394,7 +382,7 @@ $(function() {
 // 範囲指定順数配列
 function range(from, to) {
     var ar = [];
-    for (var i=from; i <= to; i++) {
+    for (var i = from; i <= to; i++) {
         ar.push(i)
     }
     return ar;
@@ -483,7 +471,7 @@ function getSubCards(rdy, crd) {
 
 // かな⇒画像ファイルナンバー変換
 function KanaNum(char){
-    for(i=0; i<arrKana.length;i++){
+    for(i = 0; i < arrKana.length; i++){
         if(arrKana[i] == char){
             return i + 1;
             break;
