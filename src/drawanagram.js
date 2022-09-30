@@ -277,21 +277,22 @@ $(function() {
             var mat_y = $('#play-mat').offset().top;
             var max_x = 0;
             var max_y = 0;
-            var min_x = $('#play-mat').width();
-            var min_y = $('#play-mat').height();
+            //var min_x = $('#play-mat').width();
+            //var min_y = $('#play-mat').height();
             var tmp_x = 0;
             var tmp_y = 0;
+            // 探索範囲（最大値）の設定
             for(i = 0; i < cards; i++){
                 tmp_x = ($('#drag' + i).offset().left - mat_x);
                 tmp_y = ($('#drag' + i).offset().top - mat_y);
-                min_x = (min_x >= tmp_x) ? tmp_x : min_x;
-                min_y = (min_y >= tmp_y) ? tmp_y : min_y;
+                //min_x = (min_x >= tmp_x) ? tmp_x : min_x;
+                //min_y = (min_y >= tmp_y) ? tmp_y : min_y;
                 max_x = (max_x <= tmp_x) ? tmp_x : max_x;
                 max_y = (max_y <= tmp_y) ? tmp_y : max_y;
             } 
             var arr_res = []
             var std_x = mat_padd;
-            var std_y = mat_padd;
+            var std_y = mat_padd + cardsize / 2 - 10;
 
             // 探索
             while(true){
@@ -299,14 +300,16 @@ $(function() {
                 var k = jdg_thin;
                 var f_head = true;
                 std_x = mat_padd - 1;
-                min_y = $('#play-mat').height();
+                var min_y = max_y;
                 while(true) {
                     for(i = 0; i < cards; i++){
                         tmp_x = $('#drag' + i).offset().left - mat_x;
                         tmp_y = $('#drag' + i).offset().top - mat_y;
-                        if(tmp_x > std_x && tmp_x <= (std_x + cardsize * k) && tmp_y >= std_y && tmp_y < (std_y + cardsize)){
+                        if(tmp_x > std_x && tmp_x <= (std_x + cardsize * k) &&
+                                 tmp_y >= (std_y - cardsize / 2) && tmp_y < (std_y + cardsize / 2)){
                             arr_tmp.push(i);
                             std_x = tmp_x;
+                            std_y = tmp_y;
                             k = 1.5;
                             f_head = false;
                             if(tmp_y < min_y){
@@ -329,7 +332,7 @@ $(function() {
                 if(arr_res.length && !arr_tmp.length){
                     break;
                 }
-                std_y = min_y + (cardsize * jdg_thin);
+                std_y = min_y + cardsize;
                 if(std_y > max_y){
                     break;
                 }
