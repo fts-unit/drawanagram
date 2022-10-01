@@ -295,12 +295,12 @@ $(function() {
             var std_y = mat_padd + cardsize / 2 - 10;
 
             // 探索
-            while(true){
+            while(true) {
                 var arr_tmp = [];
                 var k = jdg_thin;
                 var f_head = true;
                 std_x = mat_padd - 1;
-                var min_y = max_y;
+                var min_y = std_y + cardsize;
                 while(true) {
                     for(i = 0; i < cards; i++){
                         tmp_x = $('#drag' + i).offset().left - mat_x;
@@ -318,6 +318,7 @@ $(function() {
                             break;
                         } 
                         if(i == (cards - 1)){
+                            k = jdg_thin;
                             f_head = true;
                         }
                     }
@@ -329,11 +330,12 @@ $(function() {
                     }
                 }
                 arr_res.push(arr_tmp);
-                if(arr_res.length && !arr_tmp.length){
-                    break;
+                if(arr_tmp.length){
+                    std_y = min_y + cardsize;
+                } else {
+                    std_y = std_y + cardsize;
                 }
-                std_y = min_y + cardsize;
-                if(std_y > max_y){
+                if(std_y > (max_y + cardsize)){
                     break;
                 }
             }
