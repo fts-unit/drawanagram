@@ -1,4 +1,4 @@
-var cardsize = 80;
+var cardsize = 100;
 var base_mat_h = 480;
 //1inch=2.54cm
 var INCH_PAR_CM = 2.54;
@@ -7,7 +7,7 @@ var f_play = false;
 var cards = 0;
 var chars = [];
 var jdg_thin = 0.7; // 判定深度
-var strKana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー';
+var strKana = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー";
 var arrKana = strKana.split('');
 
 $(function() {
@@ -267,9 +267,10 @@ $(function() {
     });
 
     // 並べ替え判定
-    $('#opt-chk').click(function(){
+    function strSentence(isTweet = false){
         var str_msg = "どろー前には使えません！"; 
         if(f_play){
+            var str_cards = ""
             var str_res = ""
             var i;
             var mat_padd = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
@@ -281,8 +282,9 @@ $(function() {
             //var min_y = $('#play-mat').height();
             var tmp_x = 0;
             var tmp_y = 0;
-            // 探索範囲（最大値）の設定
+            // 探索範囲（最大値）の設定と配り札の文字列化
             for(i = 0; i < cards; i++){
+                str_cards += arrKana[chars[i] - 1];
                 tmp_x = ($('#drag' + i).offset().left - mat_x);
                 tmp_y = ($('#drag' + i).offset().top - mat_y);
                 //min_x = (min_x >= tmp_x) ? tmp_x : min_x;
@@ -347,8 +349,7 @@ $(function() {
                 })
                 str_res += ","
             })
-            str_msg = str_res;
-            //str_msg = str_res + "\n" + str_msg;
+
             // 漢字変換（全句第一候補で変換）
             let xhr = new XMLHttpRequest();
             var utf8str = encodeURIComponent(str_res);
@@ -360,11 +361,23 @@ $(function() {
                 } else { // show the result
                     console.log(xhr.responseText); // responseText is the server
                     const jsonObj = JSON.parse(xhr.responseText);
-                    str_msg = "";
+                    str_res = "";
                     jsonObj.forEach(elm => {
-                        str_msg += elm[1][0];
+                        str_res += elm[1][0];
                     });
-                    alert(str_msg);
+                    str_msg = "「" + str_cards + "」\r\n　　↓↓↓\r\n「" + str_res + "」";
+                    if (isTweet){
+                        str_msg += "\r\n#どろわなぐらむ";
+                        var href = location.href;
+                        var param = location.search;
+                        var url = href.replace(param, '');
+                        param = encodeURIComponent(param);
+                        str_msg = encodeURIComponent(str_msg);
+                        var tw_link = "http://twitter.com/share?text=" + str_msg + "&url=" + url + param; 
+                        window.open(tw_link, '_blank');
+                    } else {
+                        alert(str_msg);
+                    }
                 }
             }
             xhr.onprogress = function(event) {
@@ -380,6 +393,16 @@ $(function() {
         } else {
             alert(str_msg);
         }
+    }
+
+    // 並べ替え確認
+    $('#opt-chk').click(function(){
+        strSentence(false);
+        
+    });
+    // 並べ替え結果をツイート
+    $('#opt-twt').click(function(){
+        strSentence(true);
     });
 });
 
