@@ -554,7 +554,12 @@ function handleDownload() {
         canvas.toBlob(function(blob) {
 	    let link = document.createElement("a");
 	    link.href = window.URL.createObjectURL(blob);
-	    link.download = "DrawAnagram.png";
+        const date = new Date();
+        const str_dt = date
+            .toISOString()           //2022-02-05T21:00:00.000Z
+            .replace(/[^0-9]/g, '')  //20220205210000000
+            .slice(0, -5);  
+	    link.download = "DrawAnagram_" + str_dt + ".png";
 	    link.click();
   	}, "image/png");
     })
