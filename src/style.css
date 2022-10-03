@@ -17,11 +17,22 @@ button {
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 20px;
+    margin-bottom: 20px;
     text-align: center;
 }
+
+label {
+    font-size: 24px;
+}
+input {
+    transform: scale(1.5);
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
 .explanatory {
     color: #ffffff;
-    text-shadow: 1px 1px 2px #666666;
+    text-shadow: 2px 2px 4px #333333;
     margin-top: 0px;
 }
 .drag {
