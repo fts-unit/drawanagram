@@ -367,7 +367,7 @@ $(function() {
                     });
                     str_msg = "「" + str_cards + "」\r\n　　↓↓↓\r\n「" + str_res + "」";
                     if (isTweet){
-                        str_msg += "\r\n#どろわなぐらむ";
+                        str_msg += "\r\n\r\n#どろわなぐらむ\r\n";
                         var href = location.href;
                         var param = location.search;
                         var url = href.replace(param, '');
