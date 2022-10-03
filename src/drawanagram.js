@@ -558,7 +558,7 @@ function handleDownload() {
         const str_dt = date
             .toISOString()           //2022-02-05T21:00:00.000Z
             .replace(/[^0-9]/g, '')  //20220205210000000
-            .slice(0, -5);  
+            .slice(0, -3);           //20220205210000
 	    link.download = "DrawAnagram_" + str_dt + ".png";
 	    link.click();
   	}, "image/png");
