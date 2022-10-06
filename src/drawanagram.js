@@ -302,21 +302,27 @@ $(function() {
                 var k = jdg_thin;
                 var f_head = true;
                 std_x = mat_padd - 1;
-                var min_y = std_y + cardsize;
+                //var rmin_y = std_y + cardsize;
+                //var rmax_y = std_y - cardsize;
                 while(true) {
                     for(i = 0; i < cards; i++){
                         tmp_x = $('#drag' + i).offset().left - mat_x;
                         tmp_y = $('#drag' + i).offset().top - mat_y;
                         if(tmp_x > std_x && tmp_x <= (std_x + cardsize * k) &&
                                  tmp_y >= (std_y - cardsize / 2) && tmp_y < (std_y + cardsize / 2)){
-                            arr_tmp.push(i);
+                            arr_tmp.push(arrKana[chars[i] - 1]);
                             std_x = tmp_x;
                             std_y = tmp_y;
                             k = 1.5;
                             f_head = false;
-                            if(tmp_y < min_y){
-                                min_y = tmp_y;
+                            /*
+                            if(tmp_y < rmin_y){
+                                rmin_y = tmp_y;
                             }
+                            if(tmp_y < rmax_y){
+                                rmax_y = tmp_y;
+                            }
+                            */
                             break;
                         } 
                         if(i == (cards - 1)){
@@ -332,20 +338,23 @@ $(function() {
                     }
                 }
                 arr_res.push(arr_tmp);
+                /*
                 if(arr_tmp.length){
-                    std_y = min_y + cardsize;
+                    std_y = (rmin_y + rmax_y) / 2 + cardsize;
                 } else {
                     std_y = std_y + cardsize;
                 }
+                */
+                std_y = std_y + cardsize;
                 if(std_y > (max_y + cardsize)){
                     break;
                 }
             }
 
             // メッセージへの回答文字列の格納
-            arr_res.forEach(function(elm, ide){
-                elm.forEach(function(cld, idc){
-                    str_res += arrKana[chars[arr_res[ide][idc]] - 1];
+            arr_res.forEach(function(elm){
+                elm.forEach(function(cld){
+                    str_res += cld;
                 })
                 str_res += ","
             })
