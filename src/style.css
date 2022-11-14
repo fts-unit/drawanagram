@@ -1,26 +1,67 @@
 @charset 'utf-8';
-html, button, body, label{
+html, body, button, label{
     font-family: 'M PLUS 1p', 'メイリオ', Arial, Helvetica, sans-serif;
 }
 body {
-    background-image: url("../img/paper.jpg");
+    background-image: url("../img/wallpaper.jpg");
     background-repeat: repeat;
     position: relative;
 }
-h1 {
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #666666;
+
+.logo {
+    width: 330px;
+}
+.explanatory {
+    text-shadow: 2px 2px 4px #acacac;
+    margin-top: 0px;
+}
+
+#buttons{
+    display: flex;
+    flex-wrap: wrap;
 }
 button {
+    background-image: url("../img/paperbutton.jpg");
+    background-size: 100% auto;
     font-size: 16px;
     height: 40px;
     padding-left: 20px;
     padding-right: 20px;
+    margin-top: 20px;
     margin-right: 20px;
-    margin-bottom: 20px;
+    border: 0.1px solid #acacac;
+    border-radius: none;
     text-align: center;
+    box-shadow: 2px 2px 4px #666666;
+    transition: 0.2s;
+}
+button:hover {
+    box-shadow: none;
+}
+#op-draw {
+    margin-top: 0;
+    height: 60px;
+    font-size: 24px;
+    font-weight: bolder;
 }
 
+.opt-menu {
+    margin: 0 auto;
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.opt-draw {
+    float: left;
+    white-space: nowrap;
+    margin: 20px;
+    width: fit-content;
+}
+.opt-ana {
+    float: right;
+    margin: 20px;
+    width: 40%;
+}
 label {
     font-size: 24px;
 }
@@ -30,15 +71,12 @@ input {
     margin-right: 10px;
 }
 
-.explanatory {
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #333333;
-    margin-top: 0px;
-}
+#att { clear:left; }
 .drag {
     width: 100px;
     height: 100px;
     float:left;
+    box-shadow: 2px 2px 4px #666666;
 }
 #play-mat {
     width: 100%;
@@ -51,21 +89,9 @@ input {
     background-image: url("../img/cork.jpg");
     box-shadow: 2px 2px 20px #666666;
 }
-#att { clear:left; }
-.opt-manu {
-    margin: 20px;
-    padding: 20px;
-    width: 860px;
-    height:160px;
-}
-.opt-draw {
-    float: left;
-    white-space: nowrap;
-    margin: 20px;
-    width: 400px;
-}
-.opt-ana {
-    float: right;
-    margin: 20px;
-    width: 360px;
+
+@media (max-width: 1020px) {
+    .opt-ana {
+        float: left;
+    }
 }

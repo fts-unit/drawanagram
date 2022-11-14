@@ -84,13 +84,13 @@ $(function() {
 			// ポートレート
             $(window).width(pr_w);
 		}
-        if(win_w < (opt_lw + opt_rw + 100)){
-            $('.opt-draw').css('float','none');
-            $('.opt-ana').css('float','none');
-        } else {
-            $('.opt-draw').css('float','left');
-            $('.opt-ana').css('float','right');
-        }
+        // if(win_w < (opt_lw + opt_rw + 100)){
+        //     $('.opt-draw').css('float','none');
+        //     $('.opt-ana').css('float','none');
+        // } else {
+        //     $('.opt-draw').css('float','left');
+        //     $('.opt-ana').css('float','right');
+        // }
         if(win_w > win_h){
             $('#play-mat').height($('#play-mat').width() * 2 / 3);
         }else{
