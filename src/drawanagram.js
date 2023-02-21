@@ -1,14 +1,14 @@
-var cardsize = 100;
-var base_mat_h = 480;
+const CARD_SIZE = 100;
 //1inch=2.54cm
-var INCH_PAR_CM = 2.54;
-var pr_w = 480;
-var f_play = false;
+const INCH_PAR_CM = 2.54;
+var baseMatHeight = 480;
+var tmpWindowWidth = 480;
+var fPlay = false;
 var cards = 0;
 var chars = [];
-var jdg_thin = 0.7; // 判定深度
-var strKana = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー";
-var arrKana = strKana.split('');
+const JUDGE_THIN = 0.7; // 判定深度
+const STR_KANA = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー";
+const ARRAY_KANA = STR_KANA.split('');
 
 $(function() {
 
@@ -25,29 +25,19 @@ $(function() {
     
     // プレイマットのサイズ変更
     $(window).on("load orientationchange resize", function(){
-        pr_w = $(window).width();
-        //cardsize = 2 * deviceDpi().logicalDpi / INCH_PAR_CM;
-        base_mat_h = cardsize * 6;
+        tmpWindowWidth = $(window).width();
+        baseMatHeight = CARD_SIZE * 6;
         
-        var win_w = $(window).width();
-        var win_h = $(window).height();
-        $('#play-mat').width(win_w - 80);
-        var opt_lw = $('.opt-draw').width();
-        var opt_rw = $('.opt-ana').width();
+        let windowWidth = $(window).width();
+        let windowHeight = $(window).height();
+        $('#play-mat').width(windowWidth - 80);
         if(Math.abs(window.orientation) === 90){
             // ランドスケープ
 		}else{
 			// ポートレート
-            $(window).width(pr_w);
+            $(window).width(tmpWindowWidth);
 		}
-        // if(win_w < (opt_lw + opt_rw + 100)){
-        //     $('.opt-draw').css('float','none');
-        //     $('.opt-ana').css('float','none');
-        // } else {
-        //     $('.opt-draw').css('float','left');
-        //     $('.opt-ana').css('float','right');
-        // }
-        if(win_w > win_h){
+        if(windowWidth > windowHeight){
             $('#play-mat').height($('#play-mat').width() * 2 / 3);
         }else{
             $('#play-mat').height($('#play-mat').width() * 3 / 2);
@@ -62,19 +52,20 @@ $(function() {
 
     // どろわなぐらむ 本体
     $('#op-draw').on('click', function() {
-        f_play = true;
+        fPlay = true;
         
         if ($('.opt-menu').css('display')!== 'none') {
             $('.opt-menu').slideUp('slow');
             $('#opt-open').text('　▼　おぷしょん　▼　');
         }
 
-        var i, l_num, v_num, n_num;
+        var i;
+        let numLowers, numVocs, numNormals;
         cards = 0;
 
-        var checkL = $('#lower').is(':checked');
-        var checkV = $('#voc').is(':checked');
-        var checkD = $('#draw').is(':checked');
+        let checkL = $('#lower').is(':checked');
+        let checkV = $('#voc').is(':checked');
+        let checkD = $('#draw').is(':checked');
 
         $('#att').text('');
         $('#att').css('color', '#000000');
@@ -84,14 +75,14 @@ $(function() {
 
             //どろわなぐらむ
 
-            var chkS = $('#short').is(':checked');
-            var chkL = $('#long').is(':checked');
-            var chkV = $('#vast').is(':checked');
-            var chkF = $('#full').is(':checked');
+            let chkS = $('#short').is(':checked');
+            let chkL = $('#long').is(':checked');
+            let chkV = $('#vast').is(':checked');
+            let chkF = $('#full').is(':checked');
 
-            var norm_chars = (chkF) ? range(1, 46) : shuffle(range(1, 46));
-            var low_chars = (chkF) ? range(47, 50) : shuffle(range(47, 50));
-            var voc_chars = (chkF) ? range(51, 75) : shuffle(range(51, 75));
+            let norm_chars = (chkF) ? range(1, 46) : shuffle(range(1, 46));
+            let low_chars = (chkF) ? range(47, 50) : shuffle(range(47, 50));
+            let voc_chars = (chkF) ? range(51, 75) : shuffle(range(51, 75));
             
             // カード枚数
             if(chkS){
@@ -115,32 +106,32 @@ $(function() {
             } else{
                 cards = rndprime(5, 20);
             }
-            v_num = (chkF) ? 25 : getSubCards(0,cards);
+            numVocs = (chkF) ? 25 : getSubCards(0,cards);
 
             if(checkL){
                 if(checkV){
                     // 小文字・濁音
-                    l_num = (chkF) ? 4 : getSubCards(v_num,cards);
-                    n_num = (chkF) ? 46 : (cards - l_num - v_num);
-                    chars = norm_chars.slice(0, n_num);
-                    Array.prototype.push.apply(chars, low_chars.slice(0, l_num));
-                    Array.prototype.push.apply(chars, voc_chars.slice(0, v_num));
+                    numLowers = (chkF) ? 4 : getSubCards(numVocs,cards);
+                    numNormals = (chkF) ? 46 : (cards - numLowers - numVocs);
+                    chars = norm_chars.slice(0, numNormals);
+                    Array.prototype.push.apply(chars, low_chars.slice(0, numLowers));
+                    Array.prototype.push.apply(chars, voc_chars.slice(0, numVocs));
                     chars = (chkF) ? chars : shuffle(chars);
                 }
                 else{
                     // 小文字のみ
-                    l_num = (chkF) ? 4 : getSubCards(0,cards);
-                    n_num = (chkF) ? 46 : (cards - l_num);
-                    chars = norm_chars.slice(0, n_num);
-                    Array.prototype.push.apply(chars, low_chars.slice(0, l_num));
+                    numLowers = (chkF) ? 4 : getSubCards(0,cards);
+                    numNormals = (chkF) ? 46 : (cards - numLowers);
+                    chars = norm_chars.slice(0, numNormals);
+                    Array.prototype.push.apply(chars, low_chars.slice(0, numLowers));
                     chars = (chkF) ? chars : shuffle(chars);
                 }
             }
             else if(checkV){
                 // 濁音のみ
-                n_num = (chkF) ? 46 : (cards - v_num);
-                chars = norm_chars.slice(0, n_num);
-                Array.prototype.push.apply(chars, voc_chars.slice(0, v_num));
+                numNormals = (chkF) ? 46 : (cards - numVocs);
+                chars = norm_chars.slice(0, numNormals);
+                Array.prototype.push.apply(chars, voc_chars.slice(0, numVocs));
                 chars = (chkF) ? chars : shuffle(chars);
             }
             else{
@@ -152,11 +143,11 @@ $(function() {
 
             // ふつう の あなぐらむ
 
-            var strta = $('#anatext').val();
-            if (strta.match(/^[\u3041-\u308F\u3092\u3093\u30FC]+$/)) {
+            let strAnagram = $('#anatext').val();
+            if (strAnagram.match(/^[\u3041-\u308F\u3092\u3093\u30FC]+$/)) {
                 // すべて全角ひらがなである
-                $('#att').text('「 ' + strta + ' 」');
-                var arrta  = strta.split('');
+                $('#att').text('「 ' + strAnagram + ' 」');
+                var arrta  = strAnagram.split('');
                 chars = [];
                 for(i = 0; i < arrta.length; i++){
                     chars[i] = KanaNum(arrta[i]);
@@ -171,17 +162,17 @@ $(function() {
 
         // カード配布
         $('#play-mat').empty();
-        var mat_h = Math.ceil(cards/Math.floor(($('#play-mat').width())/cardsize))*3*cardsize;
-        if(mat_h > (base_mat_h)){
-            $('#play-mat').height(mat_h); 
+        let matHeight = Math.ceil(cards/Math.floor(($('#play-mat').width())/CARD_SIZE))*3*CARD_SIZE;
+        if(matHeight > (baseMatHeight)){
+            $('#play-mat').height(matHeight); 
         }
         else{
-            $('#play-mat').height(base_mat_h); 
+            $('#play-mat').height(baseMatHeight); 
         }
         for(i = 0; i < cards; i++){
-            var dom = '<div id="drag' + i + '" class="drag"><img src="./img/chars/' + ("00"+chars[i]).slice(-3) + '.png" height="' + cardsize + 'px"  width="' + cardsize + 'px" alt="' + ("00"+chars[i]).slice(-3) + '.png"></div>\n';
-            var $target = $('#play-mat');
-            $target.append(dom);
+            let domCard = '<div id="drag' + i + '" class="drag"><img src="./img/chars/' + ("00"+chars[i]).slice(-3) + '.png" height="' + CARD_SIZE + 'px"  width="' + CARD_SIZE + 'px" alt="' + ("00"+chars[i]).slice(-3) + '.png"></div>\n';
+            let $target = $('#play-mat');
+            $target.append(domCard);
         }
 
         // ドラッグ＆ドロップ機能を実装
@@ -224,100 +215,79 @@ $(function() {
 
     // 並べ替え判定
     function strSentence(isTweet = false){
-        var str_msg = "どろー前には使えません！"; 
-        if(f_play){
-            var str_cards = ""
-            var str_res = ""
-            var i;
-            var mat_padd = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
-            var mat_x = $('#play-mat').offset().left;
-            var mat_y = $('#play-mat').offset().top;
-            var max_x = 0;
-            var max_y = 0;
-            //var min_x = $('#play-mat').width();
-            //var min_y = $('#play-mat').height();
-            var tmp_x = 0;
-            var tmp_y = 0;
+        let strMsg = "どろー前には使えません！"; 
+        if(fPlay){
+            let strCards = ""
+            let strAnswer = ""
+            let i;
+            let matPadding = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
+            let matX = $('#play-mat').offset().left;
+            let matY = $('#play-mat').offset().top;
+            let maxX = 0;
+            let maxY = 0;
+            let tmpX = 0;
+            let tmpY = 0;
             // 探索範囲（最大値）の設定と配り札の文字列化
             for(i = 0; i < cards; i++){
-                str_cards += arrKana[chars[i] - 1];
-                tmp_x = ($('#drag' + i).offset().left - mat_x);
-                tmp_y = ($('#drag' + i).offset().top - mat_y);
-                //min_x = (min_x >= tmp_x) ? tmp_x : min_x;
-                //min_y = (min_y >= tmp_y) ? tmp_y : min_y;
-                max_x = (max_x <= tmp_x) ? tmp_x : max_x;
-                max_y = (max_y <= tmp_y) ? tmp_y : max_y;
+                strCards += ARRAY_KANA[chars[i] - 1];
+                tmpX = ($('#drag' + i).offset().left - matX);
+                tmpY = ($('#drag' + i).offset().top - matY);
+                maxX = (maxX <= tmpX) ? tmpX : maxX;
+                maxY = (maxY <= tmpY) ? tmpY : maxY;
             } 
-            var arr_res = []
-            var std_x = mat_padd;
-            var std_y = mat_padd + cardsize / 2 - 10;
+            let arrAnswer = []
+            let baseX = matPadding;
+            let baseY = matPadding + CARD_SIZE / 2 - 10;
 
             // 探索
             while(true) {
-                var arr_tmp = [];
-                var k = jdg_thin;
-                var f_head = true;
-                std_x = mat_padd - 1;
-                //var rmin_y = std_y + cardsize;
-                //var rmax_y = std_y - cardsize;
+                let arr_tmp = [];
+                let k = JUDGE_THIN;
+                let fHead = true;
+                baseX = matPadding - 1;
                 while(true) {
                     for(i = 0; i < cards; i++){
-                        tmp_x = $('#drag' + i).offset().left - mat_x;
-                        tmp_y = $('#drag' + i).offset().top - mat_y;
-                        if(tmp_x > std_x && tmp_x <= (std_x + cardsize * k) &&
-                                 tmp_y >= (std_y - cardsize / 2) && tmp_y < (std_y + cardsize / 2)){
-                            arr_tmp.push(arrKana[chars[i] - 1]);
-                            std_x = tmp_x;
-                            std_y = tmp_y;
+                        tmpX = $('#drag' + i).offset().left - matX;
+                        tmpY = $('#drag' + i).offset().top - matY;
+                        if(tmpX > baseX && tmpX <= (baseX + CARD_SIZE * k) &&
+                                 tmpY >= (baseY - CARD_SIZE / 2) && tmpY < (baseY + CARD_SIZE / 2)){
+                            arr_tmp.push(ARRAY_KANA[chars[i] - 1]);
+                            baseX = tmpX;
+                            baseY = tmpY;
                             k = 1.5;
-                            f_head = false;
-                            /*
-                            if(tmp_y < rmin_y){
-                                rmin_y = tmp_y;
-                            }
-                            if(tmp_y < rmax_y){
-                                rmax_y = tmp_y;
-                            }
-                            */
+                            fHead = false;
                             break;
                         } 
                         if(i == (cards - 1)){
-                            k = jdg_thin;
-                            f_head = true;
+                            k = JUDGE_THIN;
+                            fHead = true;
                         }
                     }
-                    if(f_head) {
-                        std_x = std_x + (cardsize * jdg_thin);
+                    if(fHead) {
+                        baseX = baseX + (CARD_SIZE * JUDGE_THIN);
                     }
-                    if(std_x > max_x){
+                    if(baseX > maxX){
                         break;
                     }
                 }
-                arr_res.push(arr_tmp);
-                /*
-                if(arr_tmp.length){
-                    std_y = (rmin_y + rmax_y) / 2 + cardsize;
-                } else {
-                    std_y = std_y + cardsize;
-                }
-                */
-                std_y = std_y + cardsize;
-                if(std_y > (max_y + cardsize)){
+                arrAnswer.push(arr_tmp);
+                baseY = baseY + CARD_SIZE;
+                if(baseY > (maxY + CARD_SIZE)){
                     break;
                 }
             }
 
             // メッセージへの回答文字列の格納
-            arr_res.forEach(function(elm){
+            arrAnswer.forEach(function(elm){
                 elm.forEach(function(cld){
-                    str_res += cld;
+                    strAnswer += cld;
                 })
-                str_res += ","
+                strAnswer += ","
             })
 
             // 漢字変換（全句第一候補で変換）
             let xhr = new XMLHttpRequest();
-            var utf8str = encodeURIComponent(str_res);
+            let utf8str = encodeURIComponent(strAnswer);
             xhr.open('GET', 'https://www.google.com/transliterate?langpair=ja-Hira|ja&text=' + utf8str);
             xhr.send();
             xhr.onload = function() {
@@ -326,22 +296,22 @@ $(function() {
                 } else { // show the result
                     console.log(xhr.responseText); // responseText is the server
                     const jsonObj = JSON.parse(xhr.responseText);
-                    str_res = "";
+                    strAnswer = "";
                     jsonObj.forEach(elm => {
-                        str_res += elm[1][0];
+                        strAnswer += elm[1][0];
                     });
-                    str_msg = "「" + str_cards + "」\r\n　　↓↓↓\r\n「" + str_res + "」";
+                    strMsg = "「" + strCards + "」\r\n　　↓↓↓\r\n「" + strAnswer + "」";
                     if (isTweet){
-                        str_msg += "\r\n\r\n#どろわなぐらむ\r\n";
-                        var href = location.href;
-                        var param = location.search;
-                        var url = href.replace(param, '');
+                        strMsg += "\r\n\r\n#どろわなぐらむ\r\n";
+                        let href = location.href;
+                        let param = location.search;
+                        let url = href.replace(param, '');
                         param = encodeURIComponent(param);
-                        str_msg = encodeURIComponent(str_msg);
-                        var tw_link = "http://twitter.com/share?text=" + str_msg + "&url=" + url + param; 
+                        strMsg = encodeURIComponent(strMsg);
+                        let tw_link = "http://twitter.com/share?text=" + strMsg + "&url=" + url + param; 
                         window.open(tw_link, '_blank');
                     } else {
-                        alert(str_msg);
+                        alert(strMsg);
                     }
                 }
             }
@@ -356,7 +326,7 @@ $(function() {
                 alert("Request failed");
             }
         } else {
-            alert(str_msg);
+            alert(strMsg);
         }
     }
 
@@ -464,8 +434,8 @@ function getSubCards(rdy, crd) {
 
 // かな⇒画像ファイルナンバー変換
 function KanaNum(char){
-    for(i = 0; i < arrKana.length; i++){
-        if(arrKana[i] == char){
+    for(i = 0; i < ARRAY_KANA.length; i++){
+        if(ARRAY_KANA[i] == char){
             return i + 1;
             break;
         }
