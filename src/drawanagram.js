@@ -80,9 +80,9 @@ $(function() {
             let chkV = $('#vast').is(':checked');
             let chkF = $('#full').is(':checked');
 
-            let norm_chars = (chkF) ? range(1, 46) : shuffle(range(1, 46));
-            let low_chars = (chkF) ? range(47, 50) : shuffle(range(47, 50));
-            let voc_chars = (chkF) ? range(51, 75) : shuffle(range(51, 75));
+            let normalChars = (chkF) ? range(1, 46) : shuffle(range(1, 46));
+            let lowerChars = (chkF) ? range(47, 50) : shuffle(range(47, 50));
+            let vocChars = (chkF) ? range(51, 75) : shuffle(range(51, 75));
             
             // カード枚数
             if(chkS){
@@ -113,30 +113,30 @@ $(function() {
                     // 小文字・濁音
                     numLowers = (chkF) ? 4 : getSubCards(numVocs,cards);
                     numNormals = (chkF) ? 46 : (cards - numLowers - numVocs);
-                    chars = norm_chars.slice(0, numNormals);
-                    Array.prototype.push.apply(chars, low_chars.slice(0, numLowers));
-                    Array.prototype.push.apply(chars, voc_chars.slice(0, numVocs));
+                    chars = normalChars.slice(0, numNormals);
+                    Array.prototype.push.apply(chars, lowerChars.slice(0, numLowers));
+                    Array.prototype.push.apply(chars, vocChars.slice(0, numVocs));
                     chars = (chkF) ? chars : shuffle(chars);
                 }
                 else{
                     // 小文字のみ
                     numLowers = (chkF) ? 4 : getSubCards(0,cards);
                     numNormals = (chkF) ? 46 : (cards - numLowers);
-                    chars = norm_chars.slice(0, numNormals);
-                    Array.prototype.push.apply(chars, low_chars.slice(0, numLowers));
+                    chars = normalChars.slice(0, numNormals);
+                    Array.prototype.push.apply(chars, lowerChars.slice(0, numLowers));
                     chars = (chkF) ? chars : shuffle(chars);
                 }
             }
             else if(checkV){
                 // 濁音のみ
                 numNormals = (chkF) ? 46 : (cards - numVocs);
-                chars = norm_chars.slice(0, numNormals);
-                Array.prototype.push.apply(chars, voc_chars.slice(0, numVocs));
+                chars = normalChars.slice(0, numNormals);
+                Array.prototype.push.apply(chars, vocChars.slice(0, numVocs));
                 chars = (chkF) ? chars : shuffle(chars);
             }
             else{
                 // 清音のみ
-                chars = norm_chars;
+                chars = normalChars;
             }
         }
         else{
