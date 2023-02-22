@@ -3,7 +3,7 @@ html, body, button, label, textarea{
     font-family: 'M PLUS 1p', 'メイリオ', Arial, Helvetica, sans-serif;
 }
 body {
-    background-image: url("../img/wallpaper.jpg");
+    background-image: url("../img/paper.jpg");
     background-repeat: repeat;
     position: relative;
 }
@@ -12,7 +12,8 @@ body {
     width: 330px;
 }
 .explanatory {
-    text-shadow: 2px 2px 4px #acacac;
+    color: white;
+    text-shadow: 2px 2px 4px #666666;
     margin-top: 0px;
 }
 

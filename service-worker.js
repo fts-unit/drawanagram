@@ -1,5 +1,5 @@
 // service-worker.js
-var CACHE_STATIC_VERSION = 'static-v21';
+var CACHE_STATIC_VERSION = 'static-v22';
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
@@ -34,7 +34,7 @@ self.addEventListener('activate', function(e) {
   return self.clients.claim();
 });
 
-var CACHE_DYNAMIC_VERSION = 'dynamic-v21';
+var CACHE_DYNAMIC_VERSION = 'dynamic-v22';
 
 self.addEventListener('fetch', function(event) {
   console.log('[Service Worker] Fetch');
