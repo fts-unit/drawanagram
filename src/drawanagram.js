@@ -6,7 +6,8 @@ var tmpWindowWidth = 480;
 var fPlay = false;
 var cards = 0;
 var chars = [];
-const JUDGE_THIN = 0.7; // 判定深度
+// const JUDGE_THIN = 0.7; // 判定深度
+const ROW_SIZE = CARD_SIZE * 1.2;
 const STR_KANA = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんゃゅょっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉー";
 const ARRAY_KANA = STR_KANA.split('');
 
@@ -217,9 +218,11 @@ $(function() {
     function strSentence(isTweet = false){
         let strMsg = "どろー前には使えません！"; 
         if(fPlay){
-            let strCards = ""
-            let strAnswer = ""
-            let i;
+            let strCards = "";
+            let strAnswer = "";
+            let tmpArrAnswer = [];
+            let arrAnswer = [];
+            let i, j;
             let matPadding = Number($('#play-mat').css('padding-left').replace('px', '')) + Number($('#play-mat').css('border-width').replace('px', ''));
             let matX = $('#play-mat').offset().left;
             let matY = $('#play-mat').offset().top;
@@ -227,63 +230,101 @@ $(function() {
             let maxY = 0;
             let tmpX = 0;
             let tmpY = 0;
-            // 探索範囲（最大値）の設定と配り札の文字列化
+            // 探索範囲（最大値）の設定と配り札の文字列化、
+            // 整理用オブジェクトへの格納
             for(i = 0; i < cards; i++){
-                strCards += ARRAY_KANA[chars[i] - 1];
+                let tmpChar = ARRAY_KANA[chars[i] - 1];
+                strCards += tmpChar; 
                 tmpX = ($('#drag' + i).offset().left - matX);
                 tmpY = ($('#drag' + i).offset().top - matY);
                 maxX = (maxX <= tmpX) ? tmpX : maxX;
                 maxY = (maxY <= tmpY) ? tmpY : maxY;
-            } 
-            let arrAnswer = []
-            let baseX = matPadding;
-            let baseY = matPadding + CARD_SIZE / 2 - 10;
-
-            // 探索
-            while(true) {
-                let arr_tmp = [];
-                let k = JUDGE_THIN;
-                let fHead = true;
-                baseX = matPadding - 1;
-                while(true) {
-                    for(i = 0; i < cards; i++){
-                        tmpX = $('#drag' + i).offset().left - matX;
-                        tmpY = $('#drag' + i).offset().top - matY;
-                        if(tmpX > baseX && tmpX <= (baseX + CARD_SIZE * k) &&
-                                 tmpY >= (baseY - CARD_SIZE / 2) && tmpY < (baseY + CARD_SIZE / 2)){
-                            arr_tmp.push(ARRAY_KANA[chars[i] - 1]);
-                            baseX = tmpX;
-                            baseY = tmpY;
-                            k = 1.5;
-                            fHead = false;
-                            break;
-                        } 
-                        if(i == (cards - 1)){
-                            k = JUDGE_THIN;
-                            fHead = true;
-                        }
-                    }
-                    if(fHead) {
-                        baseX = baseX + (CARD_SIZE * JUDGE_THIN);
-                    }
-                    if(baseX > maxX){
-                        break;
-                    }
-                }
-                arrAnswer.push(arr_tmp);
-                baseY = baseY + CARD_SIZE;
-                if(baseY > (maxY + CARD_SIZE)){
-                    break;
-                }
+                tmpArrAnswer.push({
+                    x: tmpX,
+                    y: tmpY,
+                    char: tmpChar
+                });
             }
+            // Y方向順に並べ替え
+            tmpArrAnswer = tmpArrAnswer.sort(function(a, b) {
+                return (a.y < b.y) ? -1 : 1;  //オブジェクトの昇順ソート
+            });
+            console.log(tmpArrAnswer);
+            // 行ごとの多重配列に変換
+            let answerRows = Math.ceil( maxY / ROW_SIZE);
+            for(i = 0; i < answerRows; i++){
+                arrAnswer.push([]);
+            }
+            j = 0;
+            let tmpRowSize = (j + 1) * ROW_SIZE;
+            tmpArrAnswer.forEach((value) => {
+                if(value.y < tmpRowSize){
+                    arrAnswer[j].push(value);
+                } else {
+                    j++;
+                    tmpRowSize = (j + 1) * ROW_SIZE;
+                    arrAnswer[j].push(value);
+                }
+            });
+            // 行ごとにX方向に並べ替え
+            arrAnswer.forEach((value) => {
+                value = value.sort(function(a, b) {
+                    return (a.x < b.x) ? -1 : 1;  //オブジェクトの昇順ソート
+                });
+            });
+            console.log(arrAnswer);
+            
+            // // 走査線方式（廃止）
+            // arrAnswer = [];              
+            // let baseX = matPadding;
+            // let baseY = matPadding + CARD_SIZE / 2 - 10;
+
+            // // 探索
+            // while(true) {
+            //     let arr_tmp = [];
+            //     let k = JUDGE_THIN;
+            //     let fHead = true;
+            //     baseX = matPadding - 1;
+            //     while(true) {
+            //         for(i = 0; i < cards; i++){
+            //             tmpX = $('#drag' + i).offset().left - matX;
+            //             tmpY = $('#drag' + i).offset().top - matY;
+            //             if(tmpX > baseX && tmpX <= (baseX + CARD_SIZE * k) &&
+            //                      tmpY >= (baseY - CARD_SIZE / 2) && tmpY < (baseY + CARD_SIZE / 2)){
+            //                 arr_tmp.push(ARRAY_KANA[chars[i] - 1]);
+            //                 baseX = tmpX;
+            //                 baseY = tmpY;
+            //                 k = 1.5;
+            //                 fHead = false;
+            //                 break;
+            //             } 
+            //             if(i == (cards - 1)){
+            //                 k = JUDGE_THIN;
+            //                 fHead = true;
+            //             }
+            //         }
+            //         if(fHead) {
+            //             baseX = baseX + (CARD_SIZE * JUDGE_THIN);
+            //         }
+            //         if(baseX > maxX){
+            //             break;
+            //         }
+            //     }
+            //     arrAnswer.push(arr_tmp);
+            //     baseY = baseY + CARD_SIZE;
+            //     if(baseY > (maxY + CARD_SIZE)){
+            //         break;
+            //     }
+            // }
 
             // メッセージへの回答文字列の格納
             arrAnswer.forEach(function(elm){
                 elm.forEach(function(cld){
-                    strAnswer += cld;
+                    strAnswer += cld.char;
                 })
                 strAnswer += ","
             })
+            console.log(strAnswer);
 
             // 漢字変換（全句第一候補で変換）
             let xhr = new XMLHttpRequest();
